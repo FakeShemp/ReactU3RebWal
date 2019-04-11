@@ -27,7 +27,12 @@ class CardComponent extends Component {
         let content;
 
         if (showInfo) {
-            content = <p key="info">{this.props.info}</p>;
+            if (typeof showInfo === "string") {
+                content = <p key="info">{this.props.info}</p>;
+            }
+            else {
+                content = this.props.info;
+            }
         } else {
             content = undefined;
         }
@@ -37,7 +42,7 @@ class CardComponent extends Component {
             info = [
                 <hr key="hr"></hr>,
                 content,
-                <Button key="button" variant="primary" onClick={this.toggleShowContent} style={{ width: '100%' }}>Show Info</Button>
+                <Button key="button" variant="primary" onClick={this.toggleShowContent} style={{ width: '100%' }}>Show {this.props.infoTitle ? this.props.infoTitle : "Info"}</Button>
             ]
         }
 
@@ -53,7 +58,7 @@ class CardComponent extends Component {
 }
 
 CardComponent.propTypes = {
-    info: PropTypes.string
+    info: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
 };
 
 export default CardComponent;

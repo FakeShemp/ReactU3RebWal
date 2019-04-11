@@ -11,7 +11,8 @@ import UserComponent from '../UserComponent/UserComponent';
 class DashboardComponent extends Component {
     constructor() {
         super();
-        this.state = { users: ["pelle", "kalle"], color: "red" };
+        this.state = { users: [], color: "red" };
+        this.getUsers();
 
         this.userName = React.createRef();
 
@@ -20,10 +21,21 @@ class DashboardComponent extends Component {
         this.toggleColor = this.toggleColor.bind(this);
     }
 
+    // Gets a list of all users from the backend
+    getUsers = () => {
+        fetch("http://api.softhouse.rocks/users")
+            .then((res) => res.json())
+            .then((res) => {
+                this.setState({ users: res })
+            })
+    }
+
     // Adds a user from the form to the state.users list
     addUser = () => {
         if (this.userName.current.value) {
-            let users = this.state.users.concat([], this.userName.current.value);
+            let users = this.state.users.concat(
+                [],
+                { id: Math.random(), name: this.userName.current.value });
             this.setState({ users: users });
 
             this.userName.current.value = '';
@@ -47,11 +59,13 @@ class DashboardComponent extends Component {
 
     render() {
         let users = [];
-        this.state.users.forEach(element => {
-            users.push(
-                <UserComponent key={element} user={element} color={this.state.color}></UserComponent>
-            )
-        });
+        if (this.state.users) {
+            this.state.users.forEach(element => {
+                users.push(
+                    <UserComponent key={element.id} id={element.id} user={element.name} color={this.state.color}></UserComponent>
+                )
+            });
+        }
 
         return (
             <div style={{ display: "flex", justifyContent: "center" }}>

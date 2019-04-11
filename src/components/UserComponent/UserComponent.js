@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 function UserComponent(props) {
   let link;
-  link = "/user/" + props.user;
+  link = "/user/" + props.id;
 
   return (
     <LinkContainer to={link} style={{ color: props.color }}>
@@ -19,6 +19,7 @@ function UserComponent(props) {
 }
 
 UserComponent.propTypes = {
+  id: PropTypes.number,
   user: PropTypes.string,
   color: PropTypes.string
 }
