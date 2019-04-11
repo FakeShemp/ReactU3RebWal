@@ -60,9 +60,9 @@ class DashboardComponent extends Component {
     render() {
         let users = [];
         if (this.state.users) {
-            this.state.users.forEach(element => {
+            this.state.users.forEach((element, index) => {
                 users.push(
-                    <UserComponent key={element.id} id={element.id} user={element.name} color={this.state.color}></UserComponent>
+                    <UserComponent key={index} id={element.id} user={element.name} color={this.state.color}></UserComponent>
                 )
             });
         }

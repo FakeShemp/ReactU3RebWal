@@ -27,19 +27,20 @@ class UserScreen extends Component {
     }
 
     // Fetches a single user from the server via id
-    getUser(id) {
-        fetch("http://api.softhouse.rocks/users/" + id)
-            .then((res) => {
-                console.log(res.status);
-                if (res.status === 200) {
-                    return res.json();
-                }
-                throw new Error('Network response was not ok. Bad ID?');
-            })
-            .then((res) => {
-                this.setState({ user: res });
-            })
-
+    async getUser(id) {
+        const res = await fetch("http://api.softhouse.rocks/users/" + id)
+        if (res.status === 200 && res.ok) {
+            try {
+                const resJson = await (() => { return res.json() })();
+                this.setState({ user: resJson });
+            }
+            catch {
+                this.setState({ user: null });
+            }
+        }
+        else {
+            this.setState({ user: null })
+        }
     }
 
     // Returns information about the user in a formatted way
@@ -66,8 +67,13 @@ class UserScreen extends Component {
         let address;
 
         if (this.props.match.params.id) {
-            selectedUser = this.formatUser();
-            address = this.formatAddress();
+            if (this.state.user != null) {
+                selectedUser = this.formatUser();
+                address = this.formatAddress();
+            }
+            else (
+                selectedUser = <p key="error">User ID is bad or missing!</p>
+            )
         }
 
         return (
